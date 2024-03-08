@@ -15,7 +15,7 @@ export default function LandingPage() {
 
   useEffect(() => {
     setLandingImg(imgArray[index]);
-  });
+  }, []);
 
   const BedRooms = ({
     image,
