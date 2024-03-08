@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .navlinks {
+    @apply font-Siliguri  text-white text-[12px];
+  }
+}
