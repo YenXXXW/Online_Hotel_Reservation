@@ -2,8 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    @apply bg-slate-200;
+  }
+}
+
 @layer components {
   .navlinks {
-    @apply font-Siliguri  text-white text-[12px];
+    @apply font-Siliguri  text-white/80 text-[12px];
   }
 }

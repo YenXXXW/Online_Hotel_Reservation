@@ -6,16 +6,18 @@ import KingRooMImage from "../assets/KingRoom.jpg";
 import QueenSizedImage from "../assets/TwoQueensRoom.jpg";
 
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+// import { Link } from "react-router-dom";
 
 export default function LandingPage() {
   const imgArray = [hotelImage, LandingImage, showerImage];
   const [index, setIndex] = useState(0);
-  const [landingImg, setLandingImg] = useState(imgArray[index]);
+  // const [avialable, setAvailable] = useState(false);
+  // const [showAvailablebutton, setShowAvailablebutton] = useState(true);
 
-  useEffect(() => {
-    setLandingImg(imgArray[index]);
-  }, []);
+  // const CheckAvailable = () => {
+  //   setAvailable(true);
+  // };
 
   const BedRooms = ({
     image,
@@ -33,9 +35,22 @@ export default function LandingPage() {
           <h3 className="font-bold font-Cormorant text-lg my-2">{title}</h3>
           <p className="text-sm font-light">{description}</p>
         </div>
-        <button className="bg-slate-800 text-white px-3 py-2 mt-10 text-sm justify-self-end ">
+        <button
+          // onClick={CheckAvailable}
+          className="bg-slate-800 text-white px-3 py-2 mt-10 text-sm"
+        >
           Check availbility
         </button>
+        {/* {avialable && (
+          <div>
+            <p className="text-md text-green-500">Available</p>{" "}
+            <Link to="/book">
+              <button className="py-1 text-sm text-white px-2 rounded-lg bg-slate-800">
+                Book now
+              </button>
+            </Link>
+          </div>
+        )} */}
       </div>
     );
   };
@@ -47,19 +62,12 @@ export default function LandingPage() {
   const FamilyRoomDescription = `Family Grand Room features an open-concept room that provides a comfortable sitting area, two Queen beds, and Butler's pantry. The bathrooms reflect Luxe's classical elegant style with inlaid "earth stone" mosaics, a luxrious bathtub, and a separate, oversize shower`;
 
   const handleArrowClick = (direction: string) => {
-    console.log(direction);
-    if (direction === "left") {
-      if (index === 0) {
-        setIndex(2);
-      } else setIndex((index) => index - 1);
-    } else {
-      if (index === 2) {
-        setIndex(0);
-      } else {
-        setIndex((index) => index + 1);
-      }
+    if (direction === "right")
+      setIndex((prevIndex) => (prevIndex + 1) % imgArray.length);
+    else {
+      if (index === 0) setIndex(2);
+      else setIndex((prevIndex) => prevIndex - 1);
     }
-    console.log(index);
   };
 
   return (
@@ -81,7 +89,7 @@ export default function LandingPage() {
             }}
           />
         </div>
-        <img src={landingImg} className="w-full h-[600px]" />
+        <img src={imgArray[index]} className="w-full h-[600px]" />
       </div>
 
       <div className="flex w-[70%] gap-[50px] justify-center m-auto my-10 ">
