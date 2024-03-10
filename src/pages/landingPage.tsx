@@ -6,12 +6,28 @@ import KingRooMImage from "../assets/KingRoom.jpg";
 import QueenSizedImage from "../assets/TwoQueensRoom.jpg";
 
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import { Link } from "react-router-dom";
 
 export default function LandingPage() {
   const imgArray = [hotelImage, LandingImage, showerImage];
   const [index, setIndex] = useState(0);
+
+  const handleArrowClick = (direction: string) => {
+    if (direction === "right")
+      setIndex((prevIndex) => (prevIndex + 1) % imgArray.length);
+    else {
+      if (index === 0) setIndex(2);
+      else setIndex((prevIndex) => prevIndex - 1);
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(() => handleArrowClick("right"), 3000);
+
+    // Clear the timer when the component unmounts
+    return () => clearInterval(intervalId);
+  }, [imgArray.length]);
   // const [avialable, setAvailable] = useState(false);
   // const [showAvailablebutton, setShowAvailablebutton] = useState(true);
 
@@ -61,15 +77,6 @@ export default function LandingPage() {
     "The luxurious Double Room is exceptionally spacious with a comfortable sitting area";
   const FamilyRoomDescription = `Family Grand Room features an open-concept room that provides a comfortable sitting area, two Queen beds, and Butler's pantry. The bathrooms reflect Luxe's classical elegant style with inlaid "earth stone" mosaics, a luxrious bathtub, and a separate, oversize shower`;
 
-  const handleArrowClick = (direction: string) => {
-    if (direction === "right")
-      setIndex((prevIndex) => (prevIndex + 1) % imgArray.length);
-    else {
-      if (index === 0) setIndex(2);
-      else setIndex((prevIndex) => prevIndex - 1);
-    }
-  };
-
   return (
     <div className="w-full h-[100vh]">
       <div className="flex items-center justify-center gap-6 relative">
@@ -89,16 +96,16 @@ export default function LandingPage() {
             }}
           />
         </div>
-        <img src={imgArray[index]} className="w-full h-[600px]" />
+        <img src={imgArray[index]} className="w-full lg:h-[600px]" />
       </div>
 
-      <div className="flex w-[70%] gap-[50px] justify-center m-auto my-10 ">
-        <div className="basis-1/2">
-          <h2 className="text-[30px] font-bold font-Cormorant px-10">
+      <div className="lg:flex w-[70%] gap-[50px] justify-center m-auto my-10 ">
+        <div className="lg:basis-1/2">
+          <h2 className="text-[30px] font-bold font-Cormorant lg:px-10">
             Welcome to LEXE, A Sithu Managed Hotel
           </h2>
         </div>
-        <div className="basis-1/2 px-10">
+        <div className="lg:basis-1/2 lg:px-10">
           <p className="text-sm">
             Steeped in French Renaissance charm, The Plaza presides like a
             pâtissier’s fantasy over the corner of Fifth Avenue and Central Park
@@ -114,7 +121,7 @@ export default function LandingPage() {
       </div>
 
       {/* BEDROOM IMAGES */}
-      <div className="flex gap-14 w-[85%] m-auto">
+      <div className="lg:flex gap-14 w-[85%] m-auto">
         <BedRooms
           image={StandardRoomImage}
           title={"Standard Room"}

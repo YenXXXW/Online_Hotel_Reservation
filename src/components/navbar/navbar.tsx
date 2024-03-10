@@ -5,7 +5,7 @@ export default function Navbar() {
   const location = useLocation();
 
   return (
-    <nav className="flex justify-between pr-16 pl-10 py-5 bg-black/80 w-full">
+    <nav className="h-auto flex justify-between md:pr-16 px-2 md:px-none md:pl-10 py-5 bg-black/80 w-full">
       <div className="flex  gap-6 items-center justify-between w-full">
         <Link to="/">
           <span
@@ -24,7 +24,7 @@ export default function Navbar() {
             BOOK
           </span>
         </Link>
-        <span className={` mx-[300px]`}>
+        <span className={` lg:mx-[300px]`}>
           <img src={Logo} className="w-[70px]" />
         </span>
         <Link to="/ask">
