@@ -3,6 +3,7 @@ import LandingPage from "./pages/landingPage";
 import Ask from "./pages/Ask";
 import Book from "./pages/Book";
 import AboutUs from "./pages/AboutUs";
+import { useEffect } from "react";
 
 function App() {
   return (

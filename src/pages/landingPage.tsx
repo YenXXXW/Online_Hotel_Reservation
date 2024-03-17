@@ -6,7 +6,7 @@ import KingRooMImage from "../assets/KingRoom.jpg";
 import QueenSizedImage from "../assets/TwoQueensRoom.jpg";
 
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 // import { Link } from "react-router-dom";
 
 export default function LandingPage() {
@@ -22,18 +22,18 @@ export default function LandingPage() {
     }
   };
 
-  useEffect(() => {
-    const intervalId = setInterval(() => handleArrowClick("right"), 3000);
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => handleArrowClick("right"), 3000);
 
-    // Clear the timer when the component unmounts
-    return () => clearInterval(intervalId);
-  }, [imgArray.length]);
+  //   // Clear the timer when the component unmounts
+  //   return () => clearInterval(intervalId);
+  // }, [imgArray.length]);
   // const [avialable, setAvailable] = useState(false);
   // const [showAvailablebutton, setShowAvailablebutton] = useState(true);
 
-  // const CheckAvailable = () => {
-  //   setAvailable(true);
-  // };
+  const CheckAvailable = () => {
+    console.log("hello");
+  };
 
   const BedRooms = ({
     image,
@@ -52,7 +52,7 @@ export default function LandingPage() {
           <p className="text-sm font-light">{description}</p>
         </div>
         <button
-          // onClick={CheckAvailable}
+          onClick={CheckAvailable}
           className="bg-slate-800 text-white px-3 py-2 mt-10 text-sm"
         >
           Check availbility

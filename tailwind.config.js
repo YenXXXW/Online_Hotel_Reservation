@@ -7,6 +7,9 @@ export default {
         Siliguri: ["Hind Siliguri"],
         Cormorant: ["Cormorant Garamond"],
       },
+      backgroundImage: {
+        rooftop: "url('/src/assets/rooftop.jpg')",
+      },
     },
   },
   plugins: [],
