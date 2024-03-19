@@ -22,19 +22,6 @@ export default function LandingPage() {
     }
   };
 
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => handleArrowClick("right"), 3000);
-
-  //   // Clear the timer when the component unmounts
-  //   return () => clearInterval(intervalId);
-  // }, [imgArray.length]);
-  // const [avialable, setAvailable] = useState(false);
-  // const [showAvailablebutton, setShowAvailablebutton] = useState(true);
-
-  const CheckAvailable = () => {
-    console.log("hello");
-  };
-
   const BedRooms = ({
     image,
     title,
@@ -51,22 +38,6 @@ export default function LandingPage() {
           <h3 className="font-bold font-Cormorant text-lg my-2">{title}</h3>
           <p className="text-sm font-light">{description}</p>
         </div>
-        <button
-          onClick={CheckAvailable}
-          className="bg-slate-800 text-white px-3 py-2 mt-10 text-sm"
-        >
-          Check availbility
-        </button>
-        {/* {avialable && (
-          <div>
-            <p className="text-md text-green-500">Available</p>{" "}
-            <Link to="/book">
-              <button className="py-1 text-sm text-white px-2 rounded-lg bg-slate-800">
-                Book now
-              </button>
-            </Link>
-          </div>
-        )} */}
       </div>
     );
   };
@@ -96,7 +67,7 @@ export default function LandingPage() {
             }}
           />
         </div>
-        <img src={imgArray[index]} className="w-full lg:h-[600px]" />
+        <img src={imgArray[index]} className="w-full lg:h-[500px]" />
       </div>
 
       <div className="lg:flex w-[70%] gap-[50px] justify-center m-auto my-10 ">

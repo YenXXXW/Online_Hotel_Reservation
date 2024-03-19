@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import barImg from "../assets/bar.jpg";
 import StandardRoomImage from "../assets/standerdRoom.jpg";
@@ -76,6 +76,40 @@ export default function Book() {
   const [checkOutMonth, setCheckOutMonth] = useState(todayMonth);
   const [checkOutYear, setCheckOutYear] = useState(todayYear);
 
+  const [stdRoomNo, setStdRoomNo] = useState(0);
+  const [KingRoomNo, setKingRoomNo] = useState(0);
+  const [QueenRoomNo, setQueenRoomNo] = useState(0);
+
+  const [availbilityResponse, setavailbilityResponse] = useState("");
+  const [bookingResponse, setBookingResponse] = useState("");
+  const ref = useRef<HTMLDivElement>(null);
+
+  const handleBook = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    checkInDate: string,
+    checkOutdate: string
+  ) => {
+    e.preventDefault();
+    const response = await fetch("http://127.0.0.1:5000/submit_booking", {
+      method: "POST",
+      body: new URLSearchParams({
+        room_type: selectedRoomType,
+        check_in_date: checkInDate,
+        check_out_date: checkOutdate,
+        guest_email: email,
+        guest_contact: contact,
+        num_guests: `${noOfGuests}`,
+        num_rooms: `${noOfRooms}`,
+        guest_name: name,
+      }),
+    });
+    const botResponse = await response.text();
+    setBookingResponse(botResponse);
+    setKingRoomNo(0);
+    setStdRoomNo(0);
+    setQueenRoomNo(0);
+  };
+
   const handleClick = (day: number, month: number, year: number) => {
     //check the total no of days booked is over 30 days
 
@@ -103,12 +137,21 @@ export default function Book() {
     }
   };
 
-  const handleSelectRoom = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedRoomType(e.target.value);
-  };
-
-  const handleCheckAvailbility = () => {
-    setRoomAvailable(true);
+  const handleCheckAvailbility = async (
+    roomType: string,
+    checkInDate: string
+  ) => {
+    const response = await fetch("http://127.0.0.1:5000/check_availability", {
+      method: "POST",
+      body: new URLSearchParams({
+        room_type: roomType,
+        check_in_date: checkInDate,
+      }),
+    });
+    const botResponse = await response.text();
+    setavailbilityResponse(botResponse);
+    if (botResponse === "Rooms are available for booking.")
+      setRoomAvailable(true);
   };
 
   const handleLeftClick = () => {
@@ -127,14 +170,6 @@ export default function Book() {
     } else {
       setCurrentMonth((month) => month + 1);
     }
-  };
-
-  // const AddDetals = () => (
-
-  // );
-  const Book = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log();
   };
 
   const Calender = ({ dayList, month, year, second }: CalenderProps) => {
@@ -229,7 +264,50 @@ export default function Book() {
             <li>Personalized butler service</li>
             <li>Marble bathroom</li>
           </ul>
-          <button className="checkAvaillbilityButtons">Select</button>
+          <div className="flex items-center mt-10">
+            <button
+              className="w-8 h-9 border-[1px] border-gray-300"
+              onClick={() => {
+                title === "Standard Room" && setStdRoomNo((room) => room + 1);
+                title === "Suite" && setQueenRoomNo((room) => room + 1);
+                title === "Double Room" && setKingRoomNo((room) => room + 1);
+              }}
+            >
+              +
+            </button>
+            <p className="text-center h-9 w-14 pt-2 border-[1px] border-slate-300">
+              {title === "Standard Room" && stdRoomNo}
+              {title === "Double Room" && KingRoomNo}
+              {title === "Suite" && QueenRoomNo}
+            </p>
+            <button
+              className="w-8 h-9  border-[1px] border-slate-300 mr-4"
+              onClick={() => {
+                title === "Standard Room" && setStdRoomNo((room) => room - 1);
+                title === "Suite" && setQueenRoomNo((room) => room - 1);
+                title === "Double Room" && setKingRoomNo((room) => room - 1);
+              }}
+            >
+              -
+            </button>
+            <button
+              className="checkAvaillbilityButtons"
+              onClick={() => {
+                setSelectedRoomType(title);
+                setRoomAvailable(false);
+                setavailbilityResponse("");
+                title === "Standard Room" && setNoOfRooms(stdRoomNo);
+                title === "Double Room" && setNoOfRooms(KingRoomNo);
+                title === "Suite Room" && setNoOfRooms(QueenRoomNo);
+
+                if (ref.current) {
+                  ref.current.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
+            >
+              Select
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -270,13 +348,6 @@ export default function Book() {
     } else {
       setDaysOfNextMonths([...getdays(currentYear, currentMonth + 1)]);
     }
-
-    // const setReservationDates = () => {
-    //   const today = date.getDate();
-    //   console.log(date.getMonth());
-    // };
-
-    // setReservationDates();
   }, [currentMonth, currentYear]);
 
   return (
@@ -284,7 +355,7 @@ export default function Book() {
       <div>
         <img src={barImg} className="w-full" />
       </div>
-      <div className="flex">
+      <div className="flex ">
         <div className="w-[60%]">
           <div className="flex gap-12 items-start w-full ">
             <div className="w-full">
@@ -365,7 +436,7 @@ export default function Book() {
           <div className="my-2 shadow-lg border-[1px] border-gray-300  w-full">
             <RoomCard
               roomImg={KingRooMImage}
-              title={"king Room"}
+              title={"Double Room"}
               area={"Sleeps 31 King30 m²"}
               description="Wake up each morning to stunning views of the ocean and beyond."
             />
@@ -373,79 +444,125 @@ export default function Book() {
           <div className="my-2 shadow-lg border-[1px] border-gray-300  w-full">
             <RoomCard
               roomImg={QueenSizedImage}
-              title={"Queen Room"}
+              title={"Suite"}
               area={"Sleeps 31 King60 m²square meters"}
               description="Gleaming parquet floors, vibrant bursts of colour and classic touches make these suites an indulgent retreat.
           "
             />
           </div>
         </div>
-        <div>
+
+        {/* YOU STAY */}
+        <div
+          className="px-10 shadow-lg border-[1px] border-slate-60000 w-full pt-4"
+          ref={ref}
+        >
           <h2 className="font-sans text-lg  tracking-wider">YOUR STAY</h2>
-          <div className="flex min-w-[250px]">
+          <div className="flex min-w-[250px]  my-3">
             <div className="text-sm basis-1/2">
               <p>Check In</p>
-              <p className="font-thin ">After 4:00pm</p>
+              <p>After 4:00pm</p>
             </div>
             <div className="text-sm  basis-1/2">
               <p>Check Out</p>
-              <p className="font-thin">Before 12:00pm</p>
+              <p>Before 12:00pm</p>
             </div>
           </div>
-          <p className="text-xs font-thin">
+          <p className="text-sm mb-2 ">
             {`${
               days[new Date(checkInYear, checkInMonth, checkInDate).getDay()]
             }, ${months[checkInMonth]} ${checkInDate}, ${checkInYear}`}
             -
             {` ${
               days[new Date(checkOutYear, checkOutMonth, checkOutDate).getDay()]
-            },            
-    ${months[checkOutMonth]} ${checkOutDate}, ${checkOutYear}`}
+            },${months[checkOutMonth]} ${checkOutDate}, ${checkOutYear}`}
           </p>
+          <p>{`${selectedRoomType} ${noOfRooms}`}</p>
+
+          {!roomAvailable && (
+            <button
+              onClick={() =>
+                handleCheckAvailbility(
+                  selectedRoomType,
+                  `${checkInYear}-${checkInMonth + 1}-${checkInDate}`
+                )
+              }
+              className={`checkAvaillbilityButtons mt-5 ${
+                noOfRooms === 0 && "opacity-50 pointer-events-none"
+              }`}
+            >
+              Check Available
+            </button>
+          )}
+          {availbilityResponse !== "" && <p>{availbilityResponse}</p>}
+          {roomAvailable && (
+            <form className="flex flex-col mt-4 gap-4 border-t-2 border-slate-300 px-2">
+              <h3 className="text-lg tracking-wider">Guest Information</h3>
+
+              <input
+                className="bookInput"
+                value={name}
+                id="name"
+                type="text"
+                onChange={(e) => setName(e.target.value)}
+                placeholder="name"
+                required
+              />
+
+              <input
+                className="bookInput"
+                value={email}
+                id="email"
+                type="email"
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="email"
+                required
+              />
+
+              <input
+                className="bookInput"
+                value={contact}
+                id="contact"
+                type="text"
+                onChange={(e) => setContact(e.target.value)}
+                placeholder="Contact"
+                required
+              />
+              <div className="flex gap-3">
+                <label id="no_of_guests" className="text-sm">
+                  No of guests:
+                </label>
+                <input
+                  className="bookInput"
+                  value={noOfGuests}
+                  id="no_of_guests"
+                  type="number"
+                  onChange={(e) => {
+                    Number(e.target.value) >= 0 &&
+                      setNoOfGuests(Number(e.target.value));
+                  }}
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="checkAvaillbilityButtons"
+                onClick={(e) =>
+                  handleBook(
+                    e,
+                    `${checkInYear}-${checkInMonth + 1}-${checkInDate}`,
+                    `${checkOutYear}-${checkOutMonth + 1}-${checkOutDate}`
+                  )
+                }
+              >
+                Book
+              </button>
+              {bookingResponse !== "" && <p>{bookingResponse}</p>}
+            </form>
+          )}
         </div>
       </div>
-      {roomAvailable && (
-        <form
-          className="flex flex-col"
-          onSubmit={(e) => {
-            Book(e);
-          }}
-        >
-          <label htmlFor="name">Name</label>
-          <input
-            value={name}
-            id="name"
-            type="text"
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-          <label htmlFor="email">Email</label>
-          <input
-            value={email}
-            id="email"
-            type="email"
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <label id="contact">Contact</label>
-          <input
-            value={contact}
-            id="contact"
-            type="text"
-            onChange={(e) => setContact(e.target.value)}
-            required
-          />
-          <label id="no_of_guests">No of guests</label>
-          <input
-            value={noOfGuests}
-            id="no_of_guests"
-            type="number"
-            onChange={(e) => setNoOfGuests(Number(e.target.value))}
-            required
-          />
-          <button type="submit">Book</button>
-        </form>
-      )}
     </section>
   );
 }

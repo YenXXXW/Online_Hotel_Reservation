@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-slate-200;
+    @apply bg-white;
   }
 }
 
@@ -14,6 +14,10 @@
   }
 
   .checkAvaillbilityButtons {
-    @apply bg-slate-800 text-white px-3 py-2 mt-10 text-sm max-w-max;
+    @apply bg-slate-800 text-white px-3 py-2  text-sm max-w-max;
+  }
+
+  .bookInput {
+    @apply focus:outline-none bg-slate-100 px-3 text-sm border-b-[1px] border-gray-700;
   }
 }
