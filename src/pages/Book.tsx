@@ -84,8 +84,26 @@ export default function Book() {
   const [bookingResponse, setBookingResponse] = useState("");
   const ref = useRef<HTMLDivElement>(null);
 
+  const bookingSuccessful = () => {
+    setBookingResponse("");
+    setavailbilityResponse("");
+    setCheckInDate(date.getDate()); //This is the date like 1,2,3,...,21,22
+    setCheckInMonth(todayMonth);
+    setCheckInYear(todayYear);
+    setCheckOutDate(date.getDate() + 1); //This is the date like 1,2,3,...,21,22
+    setCheckOutMonth(todayMonth);
+    setCheckOutYear(todayYear);
+    setNoOfRooms(1);
+    setSelectedRoomType("Standard Room");
+    setRoomAvailable(false);
+    setNoOfGuests(1);
+    setEmail("");
+    setContact("");
+    setName("");
+  };
+
   const handleBook = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    e: React.FormEvent<HTMLFormElement>,
     checkInDate: string,
     checkOutdate: string
   ) => {
@@ -296,6 +314,7 @@ export default function Book() {
                 setSelectedRoomType(title);
                 setRoomAvailable(false);
                 setavailbilityResponse("");
+                setBookingResponse("");
                 title === "Standard Room" && setNoOfRooms(stdRoomNo);
                 title === "Double Room" && setNoOfRooms(KingRoomNo);
                 title === "Suite Room" && setNoOfRooms(QueenRoomNo);
@@ -461,7 +480,7 @@ export default function Book() {
           <div className="flex min-w-[250px]  my-3">
             <div className="text-sm basis-1/2">
               <p>Check In</p>
-              <p>After 4:00pm</p>
+              <p>After 2:00pm</p>
             </div>
             <div className="text-sm  basis-1/2">
               <p>Check Out</p>
@@ -494,9 +513,22 @@ export default function Book() {
               Check Available
             </button>
           )}
-          {availbilityResponse !== "" && <p>{availbilityResponse}</p>}
+          {availbilityResponse !== "" && (
+            <p className="border-t-2 border-slate-300 my-2">
+              {availbilityResponse}
+            </p>
+          )}
           {roomAvailable && (
-            <form className="flex flex-col mt-4 gap-4 border-t-2 border-slate-300 px-2">
+            <form
+              className="flex flex-col mt-4 gap-4 border-t-2 border-slate-300 px-2"
+              onSubmit={(e) =>
+                handleBook(
+                  e,
+                  `${checkInYear}-${checkInMonth + 1}-${checkInDate}`,
+                  `${checkOutYear}-${checkOutMonth + 1}-${checkOutDate}`
+                )
+              }
+            >
               <h3 className="text-lg tracking-wider">Guest Information</h3>
 
               <input
@@ -547,19 +579,26 @@ export default function Book() {
 
               <button
                 type="submit"
-                className="checkAvaillbilityButtons"
-                onClick={(e) =>
-                  handleBook(
-                    e,
-                    `${checkInYear}-${checkInMonth + 1}-${checkInDate}`,
-                    `${checkOutYear}-${checkOutMonth + 1}-${checkOutDate}`
-                  )
-                }
+                className={`checkAvaillbilityButtons ${
+                  bookingResponse == "" ? "" : "hidden"
+                }`}
               >
                 Book
               </button>
-              {bookingResponse !== "" && <p>{bookingResponse}</p>}
+              {bookingResponse !== "" && (
+                <p className="border-t-2 border-slate-300 my-2">
+                  {bookingResponse}
+                </p>
+              )}
             </form>
+          )}
+          {bookingResponse !== "" && (
+            <button
+              className="checkAvaillbilityButtons"
+              onClick={bookingSuccessful}
+            >
+              Ok
+            </button>
           )}
         </div>
       </div>

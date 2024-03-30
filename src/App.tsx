@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import LandingPage from "./pages/landingPage";
 import Ask from "./pages/Ask";
 import Book from "./pages/Book";
@@ -8,6 +8,11 @@ import { MdChat, MdCancel } from "react-icons/md";
 function App() {
   const [showPopup, setShowPopup] = useState(false);
   const [chat, setChat] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    setChat(false);
+  }, [location]);
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowPopup(true);

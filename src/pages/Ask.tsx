@@ -1,13 +1,17 @@
 import { useState, useRef, useEffect } from "react";
 import LexeAvatarImage from "../assets/Logo.png";
 import { FaArrowAltCircleUp } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const BotChatCard = ({ dialogue }: { image: string; dialogue: string }) => {
   return (
     <div className=" ">
       <span className="px-1 text-md pl-3 shadow-lg text-sm  bg-white max-w-[250px] rounded-r-full rounded-tl-full  items-start border-[1px] border-gray-600">
-        {dialogue}
+        {dialogue === "Sure, I can help you with that" ? (
+          <Link to="/book">Click here to book</Link>
+        ) : (
+          dialogue
+        )}
       </span>
     </div>
   );
@@ -122,7 +126,7 @@ export default function Ask() {
         }),
       });
       const botResponse = await response.text();
-      console.log(botResponse);
+
       BotChat = {
         dialogue: botResponse,
         speaker: "bot",
@@ -150,7 +154,6 @@ export default function Ask() {
                 <span
                   onClick={() => {
                     if (chat.dialogue === "Book a room") {
-                      console.log(true);
                       navigate("/book");
                     } else {
                       askQuestion(chat);
