@@ -152,6 +152,7 @@ export default function Ask() {
             if (chat.speaker === "question") {
               return (
                 <span
+                  key={i}
                   onClick={() => {
                     if (chat.dialogue === "Book a room") {
                       navigate("/book");

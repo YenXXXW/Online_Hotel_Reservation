@@ -6,6 +6,8 @@ export default {
       fontFamily: {
         Siliguri: ["Hind Siliguri"],
         Cormorant: ["Cormorant Garamond"],
+        Nunito: ["Nunito Sans", "sans-serif"],
+        Josefin: ["Josefin Sans", "sans-serif"],
       },
       backgroundImage: {
         rooftop: "url('/src/assets/rooftop.jpg')",
